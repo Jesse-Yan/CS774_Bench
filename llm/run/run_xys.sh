@@ -23,7 +23,7 @@ data_output_path='./exp_result/xys_output/'
 data_kg_output_path='./exp_result/xys_output_kg/'
 
 echo "generate $engine batch, with knowledge: $use_knowledge, with chain of thought: $cot"
-python3 -u ../src/xys_request.py --db_root_path ${db_root_path} --mode ${mode} --model_path ${model_path} \
+python3 -u ./src/xys_request.py --db_root_path ${db_root_path} --mode ${mode} --model_path ${model_path} \
 --engine ${engine} --eval_path ${eval_path} --data_output_path ${data_kg_output_path} --use_knowledge ${use_knowledge} \
 --chain_of_thought ${cot} --sql_dialect ${sql_dialect} \
 --mysql_host ${mysql_host} --mysql_user ${mysql_user} --mysql_password ${mysql_password} --mysql_database ${mysql_database}
