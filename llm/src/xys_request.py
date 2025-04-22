@@ -47,7 +47,8 @@ def connect_mysql(host, user, password, database):
             user=user,
             password=password,
             database=database,
-            unix_socket="/tmp/mysql.sock"
+            port=3306
+            #unix_socket="/tmp/mysql.sock"
         )
         return db
     except Exception as e:
