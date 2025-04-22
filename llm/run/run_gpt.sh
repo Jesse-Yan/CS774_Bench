@@ -1,4 +1,4 @@
-eval_path='./data/mini_dev_sqlite.json' # _sqlite.json, _mysql.json, _postgresql.json
+eval_path='./data/mini_dev_mysql.json' # _sqlite.json, _mysql.json, _postgresql.json
 dev_path='./output/'
 db_root_path='./data/dev_databases/'
 use_knowledge='True'
@@ -16,7 +16,7 @@ num_threads=3
 # Choose the SQL dialect to run, e.g. SQLite, MySQL, PostgreSQL
 # PLEASE NOTE: You have to setup the database information in table_schema.py 
 # if you want to run the evaluation script using MySQL or PostgreSQL
-sql_dialect='SQLite'
+sql_dialect='MySQL'
 
 # Choose the output path for the generated SQL queries
 data_output_path='./exp_result/turbo_output/'
