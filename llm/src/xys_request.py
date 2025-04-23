@@ -204,13 +204,12 @@ def connect_local_model(model, tokenizer, prompt, max_tokens, temperature, stop)
         # Generate output
         generated_ids = model.generate(
             **model_inputs,
-            max_new_tokens=max_tokens,
-            temperature=temperature,
-            top_p=0.8,
-            do_sample=True,
             pad_token_id=tokenizer.pad_token_id,
             eos_token_id=tokenizer.eos_token_id,
-            stop_words=stop  # Note: stop_words may require custom implementation
+            max_new_tokens=1024,
+            temperature=0.1,
+            top_p=0.8,
+            do_sample=True,
         )
         # Decode generated tokens, excluding input tokens
         generated_ids = [
