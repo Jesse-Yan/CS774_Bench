@@ -329,7 +329,7 @@ if __name__ == "__main__":
             model, tokenizer, prompt, max_tokens=512, temperature=0.1, stop=["--", "\n\n", ";", "#"]
         )
         sql = post_process_response(response, db_id_list[i])
-        print(f"Processed {i}th question: {question_list[i]}")
+        print(f"Processed {i}th question: {question_list[i]}, Answer: {sql}")
         responses.append((sql, i))
 
     if args.chain_of_thought == "True":
