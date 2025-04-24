@@ -119,6 +119,7 @@ def print_data(score_lists, count_lists, metric="F1 Score",result_log_file=None)
     
      # Log to file in append mode
     if result_log_file is not None:
+        result_log_file = result_log_file.split(".")[0] + f"_{metric}.txt"
         with open(result_log_file, "a") as log_file:
             log_file.write(f"start calculate {metric}\n")
             log_file.write("{:20} {:20} {:20} {:20} {:20}\n".format("", *levels))
