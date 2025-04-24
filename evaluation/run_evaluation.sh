@@ -18,7 +18,7 @@ sql_dialect="MySQL" # ONLY Modify this
 # Extract the base filename without extension
 base_name=$(basename "$predicted_sql_path" .json)
 # Define the output log path
-output_log_path="../eval_result/${base_name}.txt"
+output_log_path="llm/eval_result/${base_name}.txt"
 
 case $sql_dialect in
   "SQLite")
