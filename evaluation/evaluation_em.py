@@ -1,4 +1,4 @@
-import sys
+import re
 import json
 import argparse
 import multiprocessing as mp
@@ -11,21 +11,33 @@ from evaluation_utils import (
     print_data,
 )
 
+def normalize_sql(s: str) -> str:
+    """
+    1. Remove opening ``` fences with optional lang tag.
+    2. Remove any remaining ``` or backticks.
+    3. Strip leading list markers ("-", "*").
+    4. Strip a leading "sql" token if present.
+    5. Lowercase, drop trailing semicolons.
+    6. Collapse whitespace.
+    7. Normalize commas to ", ".
+    """
+    s = re.sub(r"```[^\n]*\n", "", s)       # remove fence + lang
+    s = s.replace("```", "").replace("`", "")  # remove backticks
+    s = re.sub(r"^\s*[-*]\s*", "", s)         # list markers
+    s = re.sub(r"^\s*sql\s*", "", s, flags=re.IGNORECASE)  # leading sql
+    s = s.lower().rstrip(";")                 # lowercase, no semicolon
+    s = re.sub(r"\s+", " ", s)                # collapse whitespace
+    s = re.sub(r"\s*,\s*", ", ", s)           # normalize commas
+    return s.strip()
 
 def result_callback(result):
     exec_result.append(result)
 
-
-def calculate_ex(predicted_res, ground_truth_res):
-    res = 0
-    if set(predicted_res) == set(ground_truth_res):
-        res = 1
-    return res
-
-
 def execute_model(
     predicted_sql, ground_truth, db_place, idx, meta_time_out, sql_dialect
 ):
+    predicted_sql = normalize_sql(predicted_sql)
+    ground_truth = normalize_sql(ground_truth)
     res = int(predicted_sql == ground_truth)
     result = {
         "sql_idx": idx,
