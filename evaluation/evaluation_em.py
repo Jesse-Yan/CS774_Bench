@@ -26,20 +26,7 @@ def calculate_ex(predicted_res, ground_truth_res):
 def execute_model(
     predicted_sql, ground_truth, db_place, idx, meta_time_out, sql_dialect
 ):
-    try:
-        res = func_timeout(
-            meta_time_out,
-            execute_sql,
-            args=(predicted_sql, ground_truth, db_place, sql_dialect, calculate_ex),
-        )
-    except KeyboardInterrupt:
-        sys.exit(0)
-    except FunctionTimedOut:
-        result = [(f"timeout",)]
-        res = 0
-    except Exception as e:
-        result = [(f"error",)]  # possibly len(query) > 512 or not executable
-        res = 0
+    res = int(predicted_sql == ground_truth)
     result = {
         "sql_idx": idx,
         "predicted_sql": predicted_sql,
@@ -166,16 +153,16 @@ if __name__ == "__main__":
         sql_dialect=args.sql_dialect,
     )
     exec_result = sort_results(exec_result)
-    print("start calculate EX")
-    detail_results_path = args.output_log_path.split(".")[0] + "_EX_detail_results.json"
-    detail_scores_path = args.output_log_path.split(".")[0] + "_EX_detail_scores.json"
+    print("start calculate EM")
+    detail_results_path = args.output_log_path.split(".")[0] + "_EM_detail_results.json"
+    detail_scores_path = args.output_log_path.split(".")[0] + "_EM_detail_scores.json"
     simple_acc, moderate_acc, challenging_acc, acc, count_lists = compute_acc_by_diff(
         exec_result, args.diff_json_path, detail_results_path=detail_results_path, detail_scores_path=detail_scores_path
     )
     score_lists = [simple_acc, moderate_acc, challenging_acc, acc] 
-    print_data(score_lists, count_lists, metric="EX",result_log_file=args.output_log_path)
+    print_data(score_lists, count_lists, metric="EM",result_log_file=args.output_log_path)
     print(
         "==========================================================================================="
     )
-    print(f"Finished EX evaluation for {args.sql_dialect} on Mini Dev set")
+    print(f"Finished EM evaluation for {args.sql_dialect} on Mini Dev set")
     print("\n\n")
