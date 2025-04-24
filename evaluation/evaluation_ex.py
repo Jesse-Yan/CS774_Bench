@@ -1,4 +1,5 @@
 import sys
+import json
 import argparse
 import multiprocessing as mp
 from func_timeout import func_timeout, FunctionTimedOut
@@ -39,7 +40,12 @@ def execute_model(
     except Exception as e:
         result = [(f"error",)]  # possibly len(query) > 512 or not executable
         res = 0
-    result = {"sql_idx": idx, "res": res}
+    result = {
+        "sql_idx": idx,
+        "predicted_sql": predicted_sql,
+        "ground_truth_sql": ground_truth,
+        "res": res
+    }
     return result
 
 
@@ -66,11 +72,12 @@ def run_sqls_parallel(
     pool.join()
 
 
-def compute_acc_by_diff(exec_results, diff_json_path):
+def compute_acc_by_diff(exec_results, diff_json_path, detail_results_path=None, detail_scores_path=None):
     num_queries = len(exec_results)
     results = [res["res"] for res in exec_results]
     contents = load_json(diff_json_path)
     simple_results, moderate_results, challenging_results = [], [], []
+    cateogoried_results = {}
 
     for i, content in enumerate(contents):
         if content["difficulty"] == "simple":
@@ -84,6 +91,10 @@ def compute_acc_by_diff(exec_results, diff_json_path):
                 challenging_results.append(exec_results[i])
             except:
                 print(i)
+        
+        if content['db_id'] not in cateogoried_results:
+            cateogoried_results[content['db_id']] = []
+        cateogoried_results[content['db_id']].append(exec_results[i])
 
     simple_acc = sum([res["res"] for res in simple_results]) / len(simple_results)
     moderate_acc = sum([res["res"] for res in moderate_results]) / len(moderate_results)
@@ -97,6 +108,18 @@ def compute_acc_by_diff(exec_results, diff_json_path):
         len(challenging_results),
         num_queries,
     ]
+
+    if detail_results_path is not None:
+        with open(detail_results_path, "w") as f:
+            json.dump(cateogoried_results, f, indent=4)
+    if detail_scores_path is not None:
+        detail_scores = {}
+        for k, v in cateogoried_results.items():
+            detail_scores[k] = sum([res["res"] for res in v]) / len(v)
+            detail_scores[k] = detail_scores[k] * 100
+        with open(detail_scores_path, "w") as f:
+            json.dump(detail_scores, f, indent=4)
+
     return (
         simple_acc * 100,
         moderate_acc * 100,
@@ -144,8 +167,10 @@ if __name__ == "__main__":
     )
     exec_result = sort_results(exec_result)
     print("start calculate EX")
+    detail_results_path = args.output_log_path.split(".")[0] + "detail_results.json"
+    detail_scores_path = args.output_log_path.split(".")[0] + "detail_scores.json"
     simple_acc, moderate_acc, challenging_acc, acc, count_lists = compute_acc_by_diff(
-        exec_result, args.diff_json_path
+        exec_result, args.diff_json_path, detail_results_path=detail_results_path, detail_scores_path=detail_scores_path
     )
     score_lists = [simple_acc, moderate_acc, challenging_acc, acc] 
     print_data(score_lists, count_lists, metric="EX",result_log_file=args.output_log_path)
