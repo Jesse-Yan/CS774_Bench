@@ -33,11 +33,11 @@ def connect_mysql():
     db = pymysql.connect(
         host="localhost",
         user="root",
-        password="li123911",
+        password="cs774",
         database="BIRD",
         # unix_socket="/tmp/mysql.sock",
-        unix_socket="/var/run/mysqld/mysqld.sock"
-        # port=3306,
+        # unix_socket="/var/run/mysqld/mysqld.sock"
+        port=3306,
     )
     return db
 
