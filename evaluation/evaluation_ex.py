@@ -167,8 +167,8 @@ if __name__ == "__main__":
     )
     exec_result = sort_results(exec_result)
     print("start calculate EX")
-    detail_results_path = args.output_log_path.split(".")[0] + "detail_results.json"
-    detail_scores_path = args.output_log_path.split(".")[0] + "detail_scores.json"
+    detail_results_path = args.output_log_path.split(".")[0] + "_detail_results.json"
+    detail_scores_path = args.output_log_path.split(".")[0] + "_detail_scores.json"
     simple_acc, moderate_acc, challenging_acc, acc, count_lists = compute_acc_by_diff(
         exec_result, args.diff_json_path, detail_results_path=detail_results_path, detail_scores_path=detail_scores_path
     )
