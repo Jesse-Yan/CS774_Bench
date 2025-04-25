@@ -18,6 +18,8 @@ def result_callback(result):
 
 def calculate_ex(predicted_res, ground_truth_res):
     res = 0
+    if not ground_truth_res:
+        print("Ground truth result is empty")
     if set(predicted_res) == set(ground_truth_res):
         res = 1
     return res
@@ -33,7 +35,7 @@ def execute_model(
             args=(predicted_sql, ground_truth, db_place, sql_dialect, calculate_ex),
         )
     except KeyboardInterrupt:
-        print("KeyboardInterrupt")
+        # print("KeyboardInterrupt")
         sys.exit(0)
     except FunctionTimedOut:
         result = [(f"timeout",)]
@@ -41,7 +43,7 @@ def execute_model(
         res = 0
     except Exception as e:
         result = [(f"error",)]  # possibly len(query) > 512 or not executable
-        print(f"Error: {e}")
+        # print(f"Error: {e}")
         res = 0
     result = {
         "sql_idx": idx,
