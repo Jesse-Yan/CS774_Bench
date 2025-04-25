@@ -33,12 +33,15 @@ def execute_model(
             args=(predicted_sql, ground_truth, db_place, sql_dialect, calculate_ex),
         )
     except KeyboardInterrupt:
+        print("KeyboardInterrupt")
         sys.exit(0)
     except FunctionTimedOut:
         result = [(f"timeout",)]
+        # print(f"Timeout: {predicted_sql}")
         res = 0
     except Exception as e:
         result = [(f"error",)]  # possibly len(query) > 512 or not executable
+        print(f"Error: {e}")
         res = 0
     result = {
         "sql_idx": idx,
