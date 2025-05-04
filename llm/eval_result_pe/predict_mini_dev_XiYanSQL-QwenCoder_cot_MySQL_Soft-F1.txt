@@ -1,0 +1,15 @@
+start calculate Soft-F1
+                     simple               moderate             challenging          total               
+count                148                  250                  102                  500                 
+======================================    Soft-F1   =====================================
+Soft-F1              57.55                28.95                24.69                36.55               
+===========================================================================================
+Finished Soft-F1 evaluation for mini dev set
+
+start calculate Soft-F1
+                     simple               moderate             challenging          total               
+count                148                  250                  102                  500                 
+======================================    Soft-F1   =====================================
+Soft-F1              47.40                26.68                20.73                31.60               
+===========================================================================================
+Finished Soft-F1 evaluation for mini dev set
